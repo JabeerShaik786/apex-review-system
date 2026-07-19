@@ -61,7 +61,6 @@ const dom = {
   starBtns: document.querySelectorAll(".star-btn"),
   ratingText: document.getElementById("rating-text"),
   toStep2Btn: document.getElementById("to-step-2"),
-  confettiCanvas: document.getElementById("confetti-canvas"),
   
   // Step 2 Elements
   chipsGrid: document.getElementById("chips-grid"),
@@ -77,21 +76,19 @@ const dom = {
   googleReviewLink: document.getElementById("google-review-link"),
   backToStep2Btn: document.getElementById("back-to-step-2"),
   
-  // Success Modal Elements
-  successModal: document.getElementById("success-modal"),
-  modalContinueBtn: document.getElementById("modal-continue-btn"),
-  modalCloseBtn: document.getElementById("modal-close-btn"),
-  
   // Other Elements
-  toast: document.getElementById("toast")
+  toast: document.getElementById("toast"),
+  qrCodeCanvas: document.getElementById("qr-code-canvas")
 };
 
+// INITIALIZATION
 document.addEventListener("DOMContentLoaded", () => {
   initTheme();
   initStars();
   initChips();
   initNavigation();
   initReviewEditor();
+  initQR();
   updateStepUI();
 });
 
@@ -189,11 +186,6 @@ function setRating(ratingVal) {
   
   // Generate review since rating is a primary driver
   generateReview();
-
-  // Confetti overlay trigger on 5 stars
-  if (ratingVal === 5) {
-    triggerConfetti();
-  }
 }
 
 // ==========================================
@@ -267,18 +259,6 @@ function initReviewEditor() {
 
   dom.googleReviewLink.addEventListener("click", (e) => {
     e.preventDefault();
-    
-    // Play confetti celebration animation for 1 second
-    triggerConfetti();
-    
-    // After 1 second, display the centered glassmorphism success modal
-    setTimeout(() => {
-      dom.successModal.classList.add("show");
-    }, 1000);
-  });
-
-  // Success Modal Continue Button (Opens Google direct review dialog in new tab with fallback)
-  dom.modalContinueBtn.addEventListener("click", () => {
     try {
       const newTab = window.open(GOOGLE_REVIEW_URL, "_blank", "noopener,noreferrer");
       if (!newTab || newTab.closed || typeof newTab.closed === "undefined") {
@@ -288,12 +268,6 @@ function initReviewEditor() {
       console.warn("Failed to open direct review URL, falling back to Maps listing: ", err);
       window.location.href = GOOGLE_MAPS_FALLBACK_URL;
     }
-  });
-
-  // Success Modal Close Button (Returns user back to Step 1 Home)
-  dom.modalCloseBtn.addEventListener("click", () => {
-    dom.successModal.classList.remove("show");
-    resetState();
   });
 }
 
@@ -454,72 +428,29 @@ function resetState() {
   showToast("Selections cleared successfully!");
 }
 
-
 // ==========================================
-// LIGHTWEIGHT CANVAS CONFETTI EFFECT
+// LOCAL QR CODE RENDERING
 // ==========================================
-function triggerConfetti() {
-  const canvas = dom.confettiCanvas;
-  const ctx = canvas.getContext("2d");
-  
-  // Size canvas to fit container card
-  canvas.width = canvas.parentElement.offsetWidth;
-  canvas.height = canvas.parentElement.offsetHeight;
-  
-  // Updated confetti colors matching brand: Teal (#01B5B2) & Orange (#FE7608)
-  const colors = ["#01B5B2", "#008B89", "#FE7608", "#e56500", "#FFFFFF", "#E5E7EB"];
-  const particles = [];
-  
-  // Initialize particles from center bottom
-  for (let i = 0; i < 80; i++) {
-    particles.push({
-      x: canvas.width / 2,
-      y: canvas.height - 20,
-      radius: Math.random() * 4 + 3,
-      color: colors[Math.floor(Math.random() * colors.length)],
-      angle: Math.random() * Math.PI + Math.PI, // Upwards semi-circle direction
-      speed: Math.random() * 8 + 6,
-      gravity: 0.25,
-      friction: 0.95,
-      opacity: 1,
-      fadeSpeed: Math.random() * 0.015 + 0.01
-    });
-  }
-  
-  let animationId;
-  function animate() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    let activeParticles = 0;
-    
-    particles.forEach(p => {
-      if (p.opacity <= 0) return;
+function initQR() {
+  try {
+    if (typeof QRCode !== "undefined") {
+      // Clear out canvas container
+      dom.qrCodeCanvas.innerHTML = "";
       
-      activeParticles++;
-      
-      // Update physics
-      p.speed *= p.friction;
-      p.x += Math.cos(p.angle) * p.speed;
-      p.y += Math.sin(p.angle) * p.speed + p.gravity;
-      p.opacity -= p.fadeSpeed;
-      
-      // Draw particle
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-      ctx.fillStyle = p.color;
-      ctx.globalAlpha = Math.max(0, p.opacity);
-      ctx.fill();
-    });
-    
-    ctx.globalAlpha = 1.0;
-    
-    if (activeParticles > 0) {
-      animationId = requestAnimationFrame(animate);
+      // Generate QR Code matching page URL (with brand-aligned dark color)
+      new QRCode(dom.qrCodeCanvas, {
+        text: window.location.href,
+        width: 110,
+        height: 110,
+        colorDark: "#1F2937",
+        colorLight: "#FFFFFF",
+        correctLevel: QRCode.CorrectLevel.M
+      });
     } else {
-      cancelAnimationFrame(animationId);
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      console.warn("QRCode library not loaded yet.");
     }
+  } catch (error) {
+    console.error("Error drawing QR code: ", error);
   }
-  
-  animate();
 }
+
