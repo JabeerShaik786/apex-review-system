@@ -21,6 +21,8 @@
 
   <!-- Main Container -->
   <div class="app-container">
+    <!-- Canvas for Confetti -->
+    <canvas id="confetti-canvas" class="confetti-overlay"></canvas>
     
     <!-- Top Bar with Theme Toggle -->
     <header class="top-bar">
@@ -498,29 +500,6 @@
       </div>
     </main>
 
-    <!-- QR Code Generator & Instructions Box -->
-    <section class="qr-guide-section">
-      <div class="qr-card">
-        <div class="qr-info">
-          <div class="qr-header-group">
-            <img src="apexlogo.png" alt="Apex Dental Logo" class="qr-logo-img">
-            <h3>Scan &bull; Rate &bull; Copy &bull; Review</h3>
-          </div>
-          <p>Share your experience in just a few steps. Scan this QR code on another device to open the assistant.</p>
-          <ul class="qr-steps">
-            <li><span class="step-num">1</span> <strong>Scan</strong> the QR code</li>
-            <li><span class="step-num">2</span> <strong>Rate</strong> your experience</li>
-            <li><span class="step-num">3</span> <strong>Copy</strong> the generated review</li>
-            <li><span class="step-num">4</span> <strong>Review</strong> directly on Google</li>
-          </ul>
-        </div>
-        <div class="qr-display-container">
-          <div id="qr-code-canvas" class="qr-canvas"></div>
-          <div class="qr-scan-label">Scan Me</div>
-        </div>
-      </div>
-    </section>
-
     <!-- Footer Thank You -->
     <footer class="app-footer">
       <div class="footer-brand-section">
@@ -545,9 +524,35 @@
     </div>
   </div>
 
+  <!-- Success Celebration Modal -->
+  <div id="success-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="success-title">
+    <div class="modal-card">
+      <div class="success-icon-wrapper">
+        <svg class="success-checkmark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+      </div>
+      <h2 id="success-title">🎉 Thank you!</h2>
+      <p class="success-subtitle">Your review is ready.</p>
+      <p class="success-body">Thank you for helping Apex Dental Hospital improve patient care.</p>
+      <div class="modal-buttons">
+        <button class="primary-btn" id="modal-continue-btn">
+          <span>Continue to Google Review</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="btn-arrow">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+        <button class="secondary-btn" id="modal-close-btn">
+          <span>Back to Home</span>
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- Scripts -->
-  <script src="qrcode.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
+
