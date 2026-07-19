@@ -77,8 +77,7 @@ const dom = {
   backToStep2Btn: document.getElementById("back-to-step-2"),
   
   // Other Elements
-  toast: document.getElementById("toast"),
-  qrCodeCanvas: document.getElementById("qr-code-canvas")
+  toast: document.getElementById("toast")
 };
 
 // INITIALIZATION
@@ -88,7 +87,6 @@ document.addEventListener("DOMContentLoaded", () => {
   initChips();
   initNavigation();
   initReviewEditor();
-  initQR();
   updateStepUI();
 });
 
@@ -428,29 +426,4 @@ function resetState() {
   showToast("Selections cleared successfully!");
 }
 
-// ==========================================
-// LOCAL QR CODE RENDERING
-// ==========================================
-function initQR() {
-  try {
-    if (typeof QRCode !== "undefined") {
-      // Clear out canvas container
-      dom.qrCodeCanvas.innerHTML = "";
-      
-      // Generate QR Code matching page URL (with brand-aligned dark color)
-      new QRCode(dom.qrCodeCanvas, {
-        text: window.location.href,
-        width: 110,
-        height: 110,
-        colorDark: "#1F2937",
-        colorLight: "#FFFFFF",
-        correctLevel: QRCode.CorrectLevel.M
-      });
-    } else {
-      console.warn("QRCode library not loaded yet.");
-    }
-  } catch (error) {
-    console.error("Error drawing QR code: ", error);
-  }
-}
 
