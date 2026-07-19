@@ -77,6 +77,11 @@ const dom = {
   googleReviewLink: document.getElementById("google-review-link"),
   backToStep2Btn: document.getElementById("back-to-step-2"),
   
+  // Success Modal Elements
+  successModal: document.getElementById("success-modal"),
+  modalContinueBtn: document.getElementById("modal-continue-btn"),
+  modalCloseBtn: document.getElementById("modal-close-btn"),
+  
   // Other Elements
   toast: document.getElementById("toast"),
   qrCodeCanvas: document.getElementById("qr-code-canvas")
@@ -155,22 +160,35 @@ function highlightStarsToValue(value) {
 function setRating(ratingVal) {
   state.rating = ratingVal;
   
-  // Highlight stars in DOM
-  dom.starBtns.forEach(btn => {
+  // Highlight stars in DOM with staggered delays for standard bounce animation
+  dom.starBtns.forEach((btn, index) => {
     const btnVal = parseInt(btn.dataset.value, 10);
+    const svg = btn.querySelector("svg");
     if (btnVal <= ratingVal) {
       btn.classList.add("selected");
+      if (svg) {
+        svg.style.animationDelay = `${index * 50}ms`;
+      }
     } else {
       btn.classList.remove("selected");
+      if (svg) {
+        svg.style.animationDelay = "";
+      }
     }
   });
 
   // Enable step transition
   dom.toStep2Btn.disabled = false;
   
-  // Update dynamic rating description (in Teal CSS style)
-  dom.ratingText.textContent = RATING_TEXTS[ratingVal];
-  dom.ratingText.classList.add("has-value");
+  // Update dynamic rating description with smooth animation
+  const ratingTextVal = RATING_TEXTS[ratingVal];
+  dom.ratingText.classList.remove("animate-in");
+  
+  setTimeout(() => {
+    dom.ratingText.textContent = ratingTextVal;
+    dom.ratingText.classList.add("has-value");
+    dom.ratingText.classList.add("animate-in");
+  }, 150);
   
   // Generate review since rating is a primary driver
   generateReview();
@@ -253,19 +271,32 @@ function initReviewEditor() {
   dom.googleReviewLink.addEventListener("click", (e) => {
     e.preventDefault();
     
+    // Play confetti celebration animation for 1 second
+    triggerConfetti();
+    
+    // After 1 second, display the centered glassmorphism success modal
+    setTimeout(() => {
+      dom.successModal.classList.add("show");
+    }, 1000);
+  });
+
+  // Success Modal Continue Button (Opens Google direct review dialog in new tab with fallback)
+  dom.modalContinueBtn.addEventListener("click", () => {
     try {
-      // Attempt to open the direct review page in a new window/tab
       const newTab = window.open(GOOGLE_REVIEW_URL, "_blank", "noopener,noreferrer");
-      
-      // If the browser blocks the popup (e.g. pop-up blockers, inside webviews)
       if (!newTab || newTab.closed || typeof newTab.closed === "undefined") {
-        // Fall back to opening the Maps listing in the current window
         window.location.href = GOOGLE_MAPS_FALLBACK_URL;
       }
     } catch (err) {
       console.warn("Failed to open direct review URL, falling back to Maps listing: ", err);
       window.location.href = GOOGLE_MAPS_FALLBACK_URL;
     }
+  });
+
+  // Success Modal Close Button (Returns user back to Step 1 Home)
+  dom.modalCloseBtn.addEventListener("click", () => {
+    dom.successModal.classList.remove("show");
+    resetState();
   });
 }
 
@@ -399,13 +430,17 @@ function resetState() {
   state.customReviewText = "";
   state.isEdited = false;
   
-  // Reset star buttons
+  // Reset star buttons & remove staggered animation delays
   dom.starBtns.forEach(btn => {
     btn.classList.remove("selected", "hovered");
+    const svg = btn.querySelector("svg");
+    if (svg) {
+      svg.style.animationDelay = "";
+    }
   });
   dom.toStep2Btn.disabled = true;
   dom.ratingText.textContent = "Tap to rate";
-  dom.ratingText.classList.remove("has-value");
+  dom.ratingText.classList.remove("has-value", "animate-in");
   
   // Reset Chips
   dom.chipCards.forEach(card => {

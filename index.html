@@ -21,6 +21,8 @@
 
   <!-- Main Container -->
   <div class="app-container">
+    <!-- Canvas for Confetti -->
+    <canvas id="confetti-canvas" class="confetti-overlay"></canvas>
     
     <!-- Top Bar with Theme Toggle -->
     <header class="top-bar">
@@ -60,33 +62,56 @@
         <p>Your feedback helps us serve you better. Generate a beautiful review in just a few taps.</p>
       </div>
       <div class="hero-visual">
-        <!-- Modern Dental Aesthetic SVG themed to Teal & Orange -->
+        <!-- Smiling Tooth Mascot holding a review card SVG -->
         <svg class="hero-illustration" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <linearGradient id="toothGrad" x1="50" y1="20" x2="150" y2="180" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#01B5B2" />
-              <stop offset="100%" stop-color="#008B89" />
-            </linearGradient>
-            <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
-              <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#01B5B2" flood-opacity="0.15"/>
+            <filter id="softShadow" x="-10%" y="-10%" width="130%" height="130%">
+              <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#01B5B2" flood-opacity="0.12"/>
             </filter>
           </defs>
-          <!-- Background Circles -->
-          <circle cx="100" cy="100" r="80" fill="#01B5B2" fill-opacity="0.05" />
-          <circle cx="100" cy="100" r="60" fill="#FE7608" fill-opacity="0.06" />
+          <!-- Background Circles / Blobs -->
+          <circle cx="100" cy="100" r="76" fill="#01B5B2" fill-opacity="0.05" />
+          <circle cx="110" cy="105" r="62" fill="#FE7608" fill-opacity="0.04" />
           
           <!-- Outer Sparkles -->
-          <path d="M40 50 L43 53 L46 50 L43 47 Z" fill="#FE7608" />
-          <path d="M160 40 L162 42 L164 40 L162 38 Z" fill="#01B5B2" />
-          <path d="M150 150 L154 154 L158 150 L154 146 Z" fill="#01B5B2" />
+          <path d="M45 42 L47 45 L52 45 L48 47 L50 52 L45 49 L40 52 L42 47 L38 45 L43 45 Z" fill="#01B5B2" />
+          <path d="M158 50 L160 53 L165 53 L161 55 L163 60 L158 57 L153 60 L155 55 L151 53 L156 53 Z" fill="#FE7608" />
+          <path d="M152 145 L154 148 L159 148 L155 150 L157 155 L152 152 L147 155 L149 150 L145 148 L150 148 Z" fill="#01B5B2" />
           
-          <!-- Dental Shield / Heart Shape -->
-          <path d="M100 35 C70 35 60 55 60 85 C60 125 90 155 100 165 C110 155 140 125 140 85 C140 55 130 35 100 35Z" fill="url(#toothGrad)" filter="url(#shadow)"/>
+          <!-- Main Tooth Mascot Body -->
+          <g filter="url(#softShadow)">
+            <path d="M100 45 C72 45 64 55 64 90 C64 110 70 125 78 145 C83 155 88 165 92 165 C96 165 97 152 99 142 C100 137 100 137 101 142 C103 152 104 165 108 165 C112 165 117 155 122 145 C130 125 136 110 136 90 C136 55 128 45 100 45 Z" fill="white" stroke="#01B5B2" stroke-width="3" stroke-linejoin="round" />
+            <path d="M72 90 C72 108 77 122 84 138" stroke="#E5E7EB" stroke-width="3" stroke-linecap="round" />
+          </g>
           
-          <!-- Tooth Shine & Sparkle details inside -->
-          <path d="M90 60 C80 60 75 70 75 85 C75 105 90 120 100 135 C100 135 105 125 110 115" stroke="white" stroke-width="4" stroke-linecap="round" stroke-opacity="0.3"/>
-          <path d="M100 65 L104 69 L108 65 L104 61 Z" fill="white" />
-          <circle cx="115" cy="80" r="3" fill="#FE7608" />
+          <!-- Eyes -->
+          <circle cx="86" cy="84" r="5" fill="#1F2937" />
+          <circle cx="84" cy="82" r="1.5" fill="white" />
+          <circle cx="114" cy="84" r="5" fill="#1F2937" />
+          <circle cx="112" cy="82" r="1.5" fill="white" />
+          
+          <!-- Smiling Mouth -->
+          <path d="M92 98 Q100 110 108 98" stroke="#1F2937" stroke-width="3" stroke-linecap="round" fill="none" />
+          
+          <!-- Rosy Cheeks -->
+          <circle cx="76" cy="94" r="4" fill="#FE7608" fill-opacity="0.35" />
+          <circle cx="124" cy="94" r="4" fill="#FE7608" fill-opacity="0.35" />
+          
+          <!-- Arms -->
+          <!-- Left Arm Waving -->
+          <path d="M63 105 C50 105 44 95 47 90" stroke="#01B5B2" stroke-width="3" stroke-linecap="round" fill="none" />
+          
+          <!-- Right Arm Holding Card -->
+          <path d="M136 112 C146 116 148 118 148 118" stroke="#01B5B2" stroke-width="3" stroke-linecap="round" fill="none" />
+          
+          <!-- Orange Review Card -->
+          <rect x="142" y="102" width="36" height="26" rx="5" fill="#FE7608" stroke="#FFFFFF" stroke-width="1.5" />
+          
+          <!-- Star details on Card -->
+          <polygon points="160 107 161.5 110.5 165 111 162.5 113.5 163 117 160 115 157 117 157.5 113.5 155 111 158.5 110.5" fill="white" />
+          <line x1="148" y1="110" x2="153" y2="110" stroke="white" stroke-width="1.5" stroke-linecap="round" />
+          <line x1="148" y1="114" x2="153" y2="114" stroke="white" stroke-width="1.5" stroke-linecap="round" />
+          <line x1="148" y1="118" x2="162" y2="118" stroke="white" stroke-width="1.5" stroke-linecap="round" />
         </svg>
       </div>
     </section>
@@ -160,8 +185,6 @@
               <span class="rating-badge" id="rating-text">Tap to rate</span>
             </div>
 
-            <!-- Canvas for local Confetti on 5 stars -->
-            <canvas id="confetti-canvas" class="confetti-overlay"></canvas>
             
             <div class="step-navigation">
               <button class="primary-btn nav-next" id="to-step-2" disabled>
@@ -521,6 +544,33 @@
         <polyline points="22 4 12 14.01 9 11.01"></polyline>
       </svg>
       <span class="toast-message">Review copied successfully!</span>
+    </div>
+  </div>
+
+  <!-- Success Celebration Modal -->
+  <div id="success-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="success-title">
+    <div class="modal-card">
+      <div class="success-icon-wrapper">
+        <svg class="success-checkmark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+      </div>
+      <h2 id="success-title">🎉 Thank you!</h2>
+      <p class="success-subtitle">Your review is ready.</p>
+      <p class="success-body">Thank you for helping Apex Dental Hospital improve patient care.</p>
+      <div class="modal-buttons">
+        <button class="primary-btn" id="modal-continue-btn">
+          <span>Continue to Google Review</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="btn-arrow">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+        <button class="secondary-btn" id="modal-close-btn">
+          <span>Back to Home</span>
+        </button>
+      </div>
     </div>
   </div>
 
