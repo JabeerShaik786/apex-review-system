@@ -1,0 +1,12 @@
+{
+  "name": "apex-dental-review-system",
+  "version": "1.0.0",
+  "description": "QR-Based Review System for Apex Dental Hospital",
+  "scripts": {
+    "dev": "npx http-server -p 3000"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
