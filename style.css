@@ -949,3 +949,49 @@ body {
   font-weight: 700;
 }
 
+/* ================= FOOTER ================= */
+.app-footer {
+  margin-top: 20px;
+  padding: 24px 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-align: center;
+}
+
+[data-theme="dark"] .app-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.footer-logo {
+  width: 55px;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.developer-credit {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  color: rgba(31, 41, 55, 0.65);
+  margin: 0;
+  text-align: center;
+}
+
+[data-theme="dark"] .developer-credit {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+@media (max-width: 480px) {
+  .footer-logo {
+    width: 44px;
+  }
+  .developer-credit {
+    font-size: 12px;
+  }
+}
+
